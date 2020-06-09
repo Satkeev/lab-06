@@ -61,12 +61,16 @@ function Location(searchQuery, obj){
   this.longitude = obj.lon;
 }
 
-app.get('*', (request, response) => {
-  response.status(404).send('sorry, this route does not exist');
-})
+// app.get('*', (request, response) => {
+//   response.status(404).send('sorry, this route does not exist');
+// })
 
 // turn on the lights - move into the house - start the server
 app.listen(PORT, () => {
   console.log(`listening on ${PORT}`);
 })
-// kjhkjh
+
+
+app.get('*', (request, response) => {
+response.status(500).send('code 500, sorry, we messed up');
+})
