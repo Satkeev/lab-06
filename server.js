@@ -16,47 +16,44 @@ app.use(cors());
 // bring in the PORT by using process.env.variable name
 const PORT = process.env.PORT || 3001;
 
-// app.get('/', (request, response) => {
-//   console.log('hello out there');
-//   response.status(200).send('I like pizza');
-// });
-
-// app.get('/bananas', (request, response) => {
-//   console.log('it is Monday');
-//   response.status(200).send('tell me about it');
-// });
-
-// app.get('/pizza', (request, response) => {
-//   response.status(200).send('I am on the pizza route');
-// });
-
 app.get('/location', (request, response) => {
   try{
     // query: { city: 'seattle' },
     console.log(request.query.city);
     let search_query = request.query.city;
-  
     let geoData = require('./data/location.json');
-  
     let returnObj = new Location(search_query, geoData[0]);
-  
     console.log(returnObj);
-    // let returnObj = {
-    //   search_query: search_query,
-    //   formatted_query: geoData[0].display_name,
-    //   latitude: geoData[0].lat,
-    //   longitude: geoData[0].lon
-    // }
-  
+
     response.status(200).send(returnObj);
-    
-  } catch(err){
+    } catch(err){
     console.log('ERROR', err);
+
     response.status(500).send('sorry, we messed up');
   }
-
 })
-
+app.get('/weather', (request, response) => {
+try {
+    // let weatherInfo = getWeather(request.query.data);
+    response.status(200).send(getWeather());
+    } catch(err){
+  console.log('ERROR', err);
+  response.status(500).send('sorry, we messed up');
+}
+})
+function Weather(obj){
+    this.forecast = obj.weather.description;
+    this.time = obj.valid_date;
+}
+function getWeather(){
+    const weatherData = require('./data/weather.json');
+    const climate = [];
+    weatherData.data.forEach((day) => {
+    climate.push(new Weather(day));
+    })
+    return climate;
+}
+   
 function Location(searchQuery, obj){
   this.search_query = searchQuery;
   this.formatted_query = obj.display_name;
@@ -72,3 +69,4 @@ app.get('*', (request, response) => {
 app.listen(PORT, () => {
   console.log(`listening on ${PORT}`);
 })
+// kjhkjh
